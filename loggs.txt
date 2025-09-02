@@ -1,0 +1,3 @@
+=== Start logging ===
+
+-init d:\projects\VisualStudioCode\Laba_2_1_5_Graphics\task1\main.py
