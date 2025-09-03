@@ -7,11 +7,7 @@ InitLogFile()
 InitFile(__file__)
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
-from tkinter import ttk
 from graphic import MultiPlotApp
 
 

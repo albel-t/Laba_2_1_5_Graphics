@@ -5,12 +5,20 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
 from tkinter import ttk
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from laba_logging import *
+InitFile(__file__)
+
 class MultiPlotApp:
     def __init__(self, root, name:str, data):
         self.root = root
         self.root.title(name)
         self.root.geometry("1200x800")
         
+        self.categories_name = 'категории'
+        self.values_name = 'значения'
         # Пример данных
         self.categories = ['A', 'B', 'C', 'D', 'E']
         self.values = [23, 45, 56, 78, 33]
@@ -21,11 +29,36 @@ class MultiPlotApp:
         self.current_index = 1
         self.categories_list = [['q', 'w', 'e', 'e'], ['r', 't', 'y', 'u'], ['i', 'o', 'p', '[]'], ['a', 's', 'd', 'f'], ['g', 'h', 'j', 'k']]
         self.values_list = [[12, 32, 64, 15], [48, 63, 15, 36], [48, 95, 62, 51], [42, 51, 54, 36], [75, 35, 42, 63]]
+        self.switch_data()
+
+
         #data изъятие
         with open(data, "r", encoding="utf-8") as f:
-            read_data = f.read().join('-')
-            for i in range(0, len(read_data)):
-                read_data[i]
+            read_data = f.read().split('-')
+            print(read_data)
+            self.categories_list.clear()
+            self.values_list.clear()
+            for i in range(1, len(read_data), 2):
+                part_data_categories = []
+                part_data_values = []
+                print(read_data[i] + "   - " + read_data[i+1])
+
+                for items in (read_data[i+1].split('\n')):
+                    item = items.split(' ')
+                    if(items == ''):
+                        continue
+
+                    print(item)
+                    print(f'|{item[0]}|{item[1]}|')
+
+                    part_data_categories.append(item[0] + " " + read_data[i])
+                    part_data_values.append(int(item[1]))
+                self.categories_list.append(part_data_categories)
+                self.values_list.append(part_data_values)
+                print("all ------------")
+                print(part_data_categories)
+                print(part_data_values)
+        
 
     def set_categories(self, data):
         self.categories = data
@@ -112,8 +145,8 @@ class MultiPlotApp:
         x = np.arange(len(self.values))
         ax.plot(x, self.values, marker='o', linestyle='-', linewidth=2, markersize=8, color='blue')
         ax.set_title('Линейный график', fontsize=16, fontweight='bold')
-        ax.set_xlabel('Индекс', fontsize=12)
-        ax.set_ylabel('Значение', fontsize=12)
+        ax.set_xlabel(self.categories_name, fontsize=12)
+        ax.set_ylabel(self.values_name, fontsize=12)
         ax.grid(True, alpha=0.3)
         ax.set_xticks(x)
         ax.set_xticklabels(self.categories)
@@ -122,19 +155,19 @@ class MultiPlotApp:
         x = np.arange(len(self.values))
         scatter = ax.scatter(x, self.values, s=100, c=self.values, cmap='viridis', alpha=0.7, edgecolors='black')
         ax.set_title('Точечный график', fontsize=16, fontweight='bold')
-        ax.set_xlabel('Индекс', fontsize=12)
-        ax.set_ylabel('Значение', fontsize=12)
+        ax.set_xlabel(self.categories_name, fontsize=12)
+        ax.set_ylabel(self.values_name, fontsize=12)
         ax.grid(True, alpha=0.3)
         ax.set_xticks(x)
         ax.set_xticklabels(self.categories)
         
-        plt.colorbar(scatter, ax=ax, label='Значение')
+        plt.colorbar(scatter, ax=ax, label=self.values_name)
     
     def create_bar_plot(self, ax):
         bars = ax.bar(self.categories, self.values, alpha=0.7, edgecolor='black')
         ax.set_title('Столбчатая диаграмма', fontsize=16, fontweight='bold')
-        ax.set_xlabel('Категории', fontsize=12)
-        ax.set_ylabel('Значения', fontsize=12)
+        ax.set_xlabel(self.categories_name, fontsize=12)
+        ax.set_ylabel(self.values_name, fontsize=12)
         ax.grid(True, alpha=0.3, axis='y')
         
         for bar, value in zip(bars, self.values):
@@ -145,8 +178,8 @@ class MultiPlotApp:
     def create_barh_plot(self, ax):
         bars = ax.barh(self.categories, self.values, alpha=0.7, edgecolor='black')
         ax.set_title('Горизонтальная диаграмма', fontsize=16, fontweight='bold')
-        ax.set_xlabel('Значения', fontsize=12)
-        ax.set_ylabel('Категории', fontsize=12)
+        ax.set_xlabel(self.values_name, fontsize=12)
+        ax.set_ylabel(self.categories_name, fontsize=12)
         ax.grid(True, alpha=0.3, axis='x')
         
         for bar, value in zip(bars, self.values):
@@ -173,8 +206,8 @@ class MultiPlotApp:
     def create_hist_plot(self, ax):
         ax.hist(self.values, bins=10, color='skyblue', edgecolor='black', alpha=0.7)
         ax.set_title('Гистограмма распределения значений', fontsize=16, fontweight='bold')
-        ax.set_xlabel('Значения', fontsize=12)
-        ax.set_ylabel('Частота', fontsize=12)
+        ax.set_xlabel(self.values_name, fontsize=12)
+        ax.set_ylabel("количество", fontsize=12)
         ax.grid(True, alpha=0.3)
 
 def main():

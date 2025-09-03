@@ -2,7 +2,7 @@ import os
 import time
 
 LOG_FILE = 'loggs.txt' 
-
+inited = []
 def InitLogFile():
     with open(LOG_FILE, "w", encoding="utf-8") as f:
         # fcntl.flock(f, fcntl.LOCK_EX)  # Блокировка файла
@@ -14,6 +14,8 @@ def InitLogFile():
 def InitFile(filename):
     with open(LOG_FILE, "a+", encoding="utf-8") as f:
         print("add - "+filename)
-        f.write("-init|" + str(filename) + "\n") 
+        if filename not in inited:
+            f.write("-init|" + str(filename) + "\n") 
+            inited.append(filename)
         time.sleep(0.1)
                 
