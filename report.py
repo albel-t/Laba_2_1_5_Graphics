@@ -28,15 +28,20 @@ def addTaskTitle(text, paragraph):
     return p
 
 
-def addImage(path_to_image, paragraph):
-    addTask(path_to_image.join('\\')[-1], paragraph)
-    doc.add_picture(path_to_image, width=Inches(4.0))
+def addImage(path, image, paragraph):
+    p = addTask(f'\n{image}:' , paragraph)
+    p.add_picture(path + '\\' + image, width=Inches(4.0))
+    return p
+
 
 #visual studio
 # path_to_project = input()
+    
+LOG_FILE = 'loggs.txt' 
 
-path_to_this_document = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-path_to_template_document = "D:\projects\Templates\шаблон отчета Кафедра САПР.docx"
+path_to_this_document = os.path.dirname(os.path.abspath(__file__))
+
+path_to_template_document = "D:\\projects\\Templates\\шаблон отчета Кафедра САПР.docx"
 path_to_imgs = path_to_this_document + '\\img'
 name_laba = "laba_1"
 
@@ -57,46 +62,38 @@ print("Exercise:")
 addTask(input() + "\n", p)
 
 
-file_text = open(laba_file, "r", encoding="utf8").read()
-
+file_log = open(LOG_FILE, "r", encoding="utf8").readlines()
+files = []
 addTaskTitle("Решение:\n", p)
+for string in file_log:
+    string = string.join('|')
+    if string[0] == "-init":
+        if not (string[1] in files):
+            files.append(string[1])
+            print("добавлени путь:" + string[1])
 
 
-# print(file_text, file_text.find("/***") , file_text.find("***/"), file_text[file_text.find("/***") : file_text.find("***/")])
-addTask(file_text[file_text.find("/****")+5 : file_text.find("****/")], p) 
-print("main file: - ", laba_file)
-
-addCodeTitle("Code: " + name_solution + '.cpp\n', p)
-addCode(file_text[file_text.find("****/")+5 : ], p)
-print("write: ", name_solution + '.cpp')
+for file_name in files:
+    addCodeTitle("Из файла" + file_name + '.cpp\n', p)
+    addCode(open(file_name, "r").read(), p)
+    print("записан путь:" + file_name)
 
 
-laba_file = path_to_project + '/' + name_solution + '/' + name_laba
-for filename in glob.glob(laba_file + ".*"):  
-    addCodeTitle("\nCode: " + filename[filename.find(name_laba) : ] + '\n', p)
-    addCode(open(filename, "r").read(), p)
-    print("write: ", filename)
 
-laba_file = path_to_project + '/' + name_solution + '\\'
 
-for filename in glob.glob(laba_file + "*.cpp"):
-    print("filename:", filename)
-    if (filename not in glob.glob(laba_file + "laba_*.cpp")) and (filename not in glob.glob(laba_file + "ConsoleAlgorithms.cpp")):
-        addCodeTitle("\nCode: " + filename[filename.find('\\') : ] + '\n', p)
-        addCode(open(filename, "r").read(), p)
-        print("_write: ", filename)
 
-for filename in glob.glob(laba_file + "*.h"):
-    print("filename:", filename)
-    if  filename not in glob.glob(laba_file + "laba_*.h"):
-        addCodeTitle("\nCode: " + filename[filename.find('\\') : ] + '\n', p)
-        addCode(open(filename, "r").read(), p)
-        print("_write:", filename)
 
+# for filename in glob.glob(laba_file + "*.cpp"):
+#     print("filename:", filename)
+#     if (filename not in glob.glob(laba_file + "laba_*.cpp")) and (filename not in glob.glob(laba_file + "ConsoleAlgorithms.cpp")):
+#         addCodeTitle("\nCode: " + filename[filename.find('\\') : ] + '\n', p)
+#         addCode(open(filename, "r").read(), p)
+#         print("_write: ", filename)
 
 
 
 for item in os.listdir(path_to_imgs):
-    addImage(path_to_imgs, p)
+    print("добавлени путь:" + item)
+    addImage(path_to_imgs, item, p)
 
 doc.save(path_to_this_document + '/Oтчет_'+name_laba+'.docx') 
