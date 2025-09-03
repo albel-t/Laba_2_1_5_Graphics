@@ -53,28 +53,27 @@ style.font.name = 'Times_New_Roman'
 style.font.size = Pt(14)
 p = doc.add_paragraph(" ")
 
-addTaskTitle("Цель работы:\n", p)
+addTaskTitle("\nЦель работы:\n", p)
 print("Purpose of the work:")
 addTask(input() + "\n", p)
 
-addTaskTitle("Заданиe:\n", p)
+addTaskTitle("\nЗаданиe:\n", p)
 print("Exercise:")
 addTask(input() + "\n", p)
 
 
 file_log = open(LOG_FILE, "r", encoding="utf8").readlines()
 files = []
-addTaskTitle("Решение:\n", p)
+addTaskTitle("\nРешение:\n", p)
 for string in file_log:
-    string = string.join('|')
-    if string[0] == "-init":
-        if not (string[1] in files):
-            files.append(string[1])
-            print("добавлени путь:" + string[1])
+    string = string.split('|')
+    if "-init" in string[0]:
+        files.append(string[1].replace('\n', ''))
+        print("добавлени путь:" + string[1])
 
 
 for file_name in files:
-    addCodeTitle("Из файла" + file_name + '.cpp\n', p)
+    addCodeTitle("\nИз файла ..." + file_name[-25:] + '.cpp\n', p)
     addCode(open(file_name, "r").read(), p)
     print("записан путь:" + file_name)
 
