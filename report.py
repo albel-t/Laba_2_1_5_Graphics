@@ -78,19 +78,6 @@ for file_name in files:
     print("записан путь:" + file_name)
 
 
-
-
-
-
-# for filename in glob.glob(laba_file + "*.cpp"):
-#     print("filename:", filename)
-#     if (filename not in glob.glob(laba_file + "laba_*.cpp")) and (filename not in glob.glob(laba_file + "ConsoleAlgorithms.cpp")):
-#         addCodeTitle("\nCode: " + filename[filename.find('\\') : ] + '\n', p)
-#         addCode(open(filename, "r").read(), p)
-#         print("_write: ", filename)
-
-
-
 for item in os.listdir(path_to_imgs):
     print("добавлени путь:" + item)
     addImage(path_to_imgs, item, p)
