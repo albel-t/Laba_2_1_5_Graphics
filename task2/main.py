@@ -13,7 +13,9 @@ from graphic import MultiPlotApp
 
 def main():
     root = tk.Tk()
-    app = MultiPlotApp(root, "window", "D:\\projects\\VisualStudioCode\\Laba_2_1_5_Graphics\\task1\\task1_data.txt")
+    app = MultiPlotApp(root, "window", "D:\\projects\\VisualStudioCode\\Laba_2_1_5_Graphics\\task1\\task2_data.txt")
+    app.categories_name = "дни"
+    app.values_name = "коммиты"
     root.mainloop()
 
 if __name__ == "__main__":

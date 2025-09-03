@@ -92,9 +92,7 @@ class MultiPlotApp:
             ttk.Radiobutton(control_frame, text=text, variable=self.plot_type, 
                            value=value, command=self.update_plot).grid(row=0, column=i+1, padx=5)
             
-        # Кнопка обновления
         ttk.Button(control_frame, text="<-", command=self.switch_data_l).grid(row=0, column=len(plot_types)+1, padx=5)        
-        # Кнопка обновления
         ttk.Button(control_frame, text="->", command=self.switch_data_r).grid(row=0, column=len(plot_types)+2, padx=5)
 
         self.figure = plt.Figure(figsize=(10, 6), dpi=100)
