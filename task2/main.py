@@ -4,7 +4,6 @@ import copy
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from laba_logging import *
-InitLogFile()
 InitFile(__file__)
 
 
@@ -50,21 +49,23 @@ def main():
     app.categories_list_without_null =  copy.deepcopy(app.categories_list)
     app.values_list_without_null =  copy.deepcopy(app.values_list)
 
-    for year in range(0, 3):
+    for year in range(0, 6):
         for month in months:
             for day in range(1, months[month]+1):
                 # print(f"year {year}, month {month}, day {day}")
                 title = f'{month} {year+2020}'
-                num_cell = months_num[month] + year*12
-                if title not in days_name[num_cell][0]:
+                num_cell = months_num[month] + year*12 - 1
+
+                if (num_cell >= len(days_name)) or (title not in days_name[num_cell][0]):
                     days_name.insert(num_cell, [])
                     days_data.insert(num_cell, [])
+                # print(f" поиск {day} {month} {year+2020}  в {days_name[num_cell]}")
+                # print((len(days_name[num_cell]) == 0) ,  (len(days_name[num_cell]) < day))
+                if (len(days_name[num_cell]) == 0) or (len(days_name[num_cell]) < day) or (f'{day} {month} {year+2020}' != days_name[num_cell][day-1]):
+                    days_name[num_cell].insert(day-1, f'{day} {title}')
+                    days_data[num_cell].insert(day-1, 0)
 
-                if f'{day} {title}' not in days_name:
-                    days_name[num_cell].insert(day, f'{day} {title}')
-                    days_data[num_cell].insert(day, 0)
-
-
+    print(app.categories_list)
     # days_name = list(map(lambda x: list(x), app.categories_list))
     app.categories_list = days_name
     app.values_list = days_data
