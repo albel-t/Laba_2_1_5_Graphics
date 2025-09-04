@@ -19,18 +19,20 @@ class MultiPlotApp:
         
         self.categories_name = 'категории'
         self.values_name = 'значения'
-        # Пример данных
-        self.categories = ['A', 'B', 'C', 'D', 'E']
-        self.values = [23, 45, 56, 78, 33]
+
         # self.colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#F9A826', '#6C5CE7']
-        
-        self.create_widgets()
-        self.create_plots()
+        self.categories = '0'
+        self.values = 1
+
         self.current_index = 1
         self.categories_list = [['q', 'w', 'e', 'e'], ['r', 't', 'y', 'u'], ['i', 'o', 'p', '[]'], ['a', 's', 'd', 'f'], ['g', 'h', 'j', 'k']]
         self.values_list = [[12, 32, 64, 15], [48, 63, 15, 36], [48, 95, 62, 51], [42, 51, 54, 36], [75, 35, 42, 63]]
-        self.switch_data()
-
+        # self.switch_data()        
+        self.create_widgets()
+        self.create_plots()
+        # Пример данных
+        self.categories_list_without_null = self.categories_list
+        self.values_list_without_null = self.values_list
 
         #data изъятие
         with open(data, "r", encoding="utf-8") as f:
@@ -104,20 +106,20 @@ class MultiPlotApp:
     
     def switch_data_l(self):
         self.current_index = max(self.current_index - 1, 1)
-        self.switch_data()
+        self.update_plot()
 
     def switch_data_r(self):
         self.current_index = min(self.current_index + 1, len(self.categories_list)-2)
-        self.switch_data()
+        self.update_plot()
+
 
     def switch_data(self):
         self.set_categories(self.categories_list[self.current_index-1]+self.categories_list[self.current_index]+self.categories_list[self.current_index+1])
         self.set_values(self.values_list[self.current_index-1]+self.values_list[self.current_index]+self.values_list[self.current_index+1])
-        self.update_plot()
 
     def update_plot(self):
 
-
+        self.switch_data()
         plot_type = self.plot_type.get()
         self.figure.clear()
         
@@ -128,10 +130,14 @@ class MultiPlotApp:
         elif plot_type == "scatter":
             self.create_scatter_plot(ax)
         elif plot_type == "bar":
+            self.set_categories(self.categories_list_without_null[self.current_index-1]+self.categories_list_without_null[self.current_index]+self.categories_list_without_null[self.current_index+1])
+            self.set_values(self.values_list_without_null[self.current_index-1]+self.values_list_without_null[self.current_index]+self.values_list_without_null[self.current_index+1])
             self.create_bar_plot(ax)
         elif plot_type == "barh":
             self.create_barh_plot(ax)
         elif plot_type == "pie":
+            self.set_categories(self.categories_list[self.current_index-1]+self.categories_list[self.current_index]+self.categories_list[self.current_index+1])
+            self.set_values(self.values_list[self.current_index-1]+self.values_list[self.current_index]+self.values_list[self.current_index+1])
             self.create_pie_plot(ax)
         elif plot_type == "hist":
             self.create_hist_plot(ax)
@@ -147,8 +153,9 @@ class MultiPlotApp:
         ax.set_ylabel(self.values_name, fontsize=12)
         ax.grid(True, alpha=0.3)
         ax.set_xticks(x)
-        ax.set_xticklabels(self.categories)
-    
+        # ax.set_xticklabels(self.categories)
+        ax.set_xticklabels(self.categories, rotation=90, ha='center', fontsize=8)
+
     def create_scatter_plot(self, ax):
         x = np.arange(len(self.values))
         scatter = ax.scatter(x, self.values, s=100, c=self.values, cmap='viridis', alpha=0.7, edgecolors='black')
@@ -157,8 +164,9 @@ class MultiPlotApp:
         ax.set_ylabel(self.values_name, fontsize=12)
         ax.grid(True, alpha=0.3)
         ax.set_xticks(x)
-        ax.set_xticklabels(self.categories)
-        
+        # ax.set_xticklabels(self.categories)
+        ax.set_xticklabels(self.categories, rotation=90, ha='center', fontsize=8)
+
         plt.colorbar(scatter, ax=ax, label=self.values_name)
     
     def create_bar_plot(self, ax):
@@ -166,13 +174,13 @@ class MultiPlotApp:
         ax.set_title('Столбчатая диаграмма', fontsize=16, fontweight='bold')
         ax.set_xlabel(self.categories_name, fontsize=12)
         ax.set_ylabel(self.values_name, fontsize=12)
-        ax.grid(True, alpha=0.3, axis='y')
+        ax.grid(True, alpha=0.3, axis='x')
         
         for bar, value in zip(bars, self.values):
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height + 1,
                    f'{value}', ha='center', va='bottom', fontweight='bold')
-    
+            
     def create_barh_plot(self, ax):
         bars = ax.barh(self.categories, self.values, alpha=0.7, edgecolor='black')
         ax.set_title('Горизонтальная диаграмма', fontsize=16, fontweight='bold')

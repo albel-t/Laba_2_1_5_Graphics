@@ -1,4 +1,4 @@
 === Start logging ===
 -init|d:\projects\VisualStudioCode\Laba_2_1_5_Graphics\laba_logging.py
--init|d:\projects\VisualStudioCode\Laba_2_1_5_Graphics\task1\main.py
+-init|d:\projects\VisualStudioCode\Laba_2_1_5_Graphics\task2\main.py
 -init|d:\projects\VisualStudioCode\Laba_2_1_5_Graphics\graphic.py
