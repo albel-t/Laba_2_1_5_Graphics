@@ -16,7 +16,8 @@ class MultiPlotApp:
         self.root = root
         self.root.title(name)
         self.root.geometry("1200x800")
-        
+
+
         self.categories_name = 'категории'
         self.values_name = 'значения'
 
@@ -25,14 +26,17 @@ class MultiPlotApp:
         self.values = 1
 
         self.current_index = 1
+        self.current_index_s = 1
         self.categories_list = [['q', 'w', 'e', 'e'], ['r', 't', 'y', 'u'], ['i', 'o', 'p', '[]'], ['a', 's', 'd', 'f'], ['g', 'h', 'j', 'k']]
         self.values_list = [[12, 32, 64, 15], [48, 63, 15, 36], [48, 95, 62, 51], [42, 51, 54, 36], [75, 35, 42, 63]]
+        self.categories_list_without_null = self.categories_list
+        self.values_list_without_null = self.values_list
         # self.switch_data()        
         self.create_widgets()
         self.create_plots()
         # Пример данных
-        self.categories_list_without_null = self.categories_list
-        self.values_list_without_null = self.values_list
+        # 
+        # 
 
         #data изъятие
         with open(data, "r", encoding="utf-8") as f:
@@ -106,16 +110,19 @@ class MultiPlotApp:
     
     def switch_data_l(self):
         self.current_index = max(self.current_index - 1, 1)
+        self.current_index_s = max(self.current_index_s - 1, 1)
         self.update_plot()
 
     def switch_data_r(self):
         self.current_index = min(self.current_index + 1, len(self.categories_list)-2)
+        self.current_index_s = min(self.current_index + 1, len(self.categories_list_without_null)-2)
         self.update_plot()
 
 
     def switch_data(self):
         self.set_categories(self.categories_list[self.current_index-1]+self.categories_list[self.current_index]+self.categories_list[self.current_index+1])
         self.set_values(self.values_list[self.current_index-1]+self.values_list[self.current_index]+self.values_list[self.current_index+1])
+
 
     def update_plot(self):
 
@@ -130,14 +137,16 @@ class MultiPlotApp:
         elif plot_type == "scatter":
             self.create_scatter_plot(ax)
         elif plot_type == "bar":
-            self.set_categories(self.categories_list_without_null[self.current_index-1]+self.categories_list_without_null[self.current_index]+self.categories_list_without_null[self.current_index+1])
-            self.set_values(self.values_list_without_null[self.current_index-1]+self.values_list_without_null[self.current_index]+self.values_list_without_null[self.current_index+1])
+            self.set_categories(self.categories_list_without_null[self.current_index_s-1]+self.categories_list_without_null[self.current_index_s]+self.categories_list_without_null[self.current_index_s+1])
+            self.set_values(self.values_list_without_null[self.current_index_s-1]+self.values_list_without_null[self.current_index_s]+self.values_list_without_null[self.current_index_s+1])
             self.create_bar_plot(ax)
         elif plot_type == "barh":
+            self.set_categories(self.categories_list_without_null[self.current_index_s-1]+self.categories_list_without_null[self.current_index_s]+self.categories_list_without_null[self.current_index_s+1])
+            self.set_values(self.values_list_without_null[self.current_index_s-1]+self.values_list_without_null[self.current_index_s]+self.values_list_without_null[self.current_index_s+1])
             self.create_barh_plot(ax)
         elif plot_type == "pie":
-            self.set_categories(self.categories_list[self.current_index-1]+self.categories_list[self.current_index]+self.categories_list[self.current_index+1])
-            self.set_values(self.values_list[self.current_index-1]+self.values_list[self.current_index]+self.values_list[self.current_index+1])
+            self.set_categories(self.categories_list_without_null[self.current_index_s-1]+self.categories_list_without_null[self.current_index_s]+self.categories_list_without_null[self.current_index_s+1])
+            self.set_values(self.values_list_without_null[self.current_index_s-1]+self.values_list_without_null[self.current_index_s]+self.values_list_without_null[self.current_index_s+1])
             self.create_pie_plot(ax)
         elif plot_type == "hist":
             self.create_hist_plot(ax)
@@ -173,8 +182,8 @@ class MultiPlotApp:
         bars = ax.bar(self.categories, self.values, alpha=0.7, edgecolor='black')
         ax.set_title('Столбчатая диаграмма', fontsize=16, fontweight='bold')
         ax.set_xlabel(self.categories_name, fontsize=12)
-        ax.set_ylabel(self.values_name, fontsize=12)
-        ax.grid(True, alpha=0.3, axis='x')
+        ax.set_ylabel('Значения', fontsize=12)
+        ax.grid(True, alpha=0.3, axis='y')
         
         for bar, value in zip(bars, self.values):
             height = bar.get_height()

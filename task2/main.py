@@ -1,5 +1,6 @@
 import sys
 import os
+import copy
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from laba_logging import *
@@ -46,12 +47,13 @@ def main():
     days_name = app.categories_list
     days_data = app.values_list
 
-    app.categories_list_without_null = app.categories_list.copy()
-    app.values_list_without_null = app.values_list.copy()
+    app.categories_list_without_null =  copy.deepcopy(app.categories_list)
+    app.values_list_without_null =  copy.deepcopy(app.values_list)
+
     for year in range(0, 3):
         for month in months:
             for day in range(1, months[month]+1):
-                print(f"year {year}, month {month}, day {day}")
+                # print(f"year {year}, month {month}, day {day}")
                 title = f'{month} {year+2020}'
                 num_cell = months_num[month] + year*12
                 if title not in days_name[num_cell][0]:
@@ -61,9 +63,9 @@ def main():
                 if f'{day} {title}' not in days_name:
                     days_name[num_cell].insert(day, f'{day} {title}')
                     days_data[num_cell].insert(day, 0)
-    print(days_name)
-    print(days_data)
-    days_name = list(map(lambda x: list(x), app.categories_list))
+
+
+    # days_name = list(map(lambda x: list(x), app.categories_list))
     app.categories_list = days_name
     app.values_list = days_data
     root.mainloop()
